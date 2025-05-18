@@ -181,7 +181,6 @@ public struct ScalingHeaderScrollView<Header: View, HeaderOverlay: View, Content
         self.headerOverlay = headerOverlay()
         self.content = content()
         _progress = .constant(0)
-        _offsetForHeader = .constant(0)
         _scrollOffset = .constant(0)
         _scrollToTop = .constant(false)
         _shouldSnapTo = .constant(nil)
@@ -409,8 +408,7 @@ public struct ScalingHeaderScrollView<Header: View, HeaderOverlay: View, Content
         } else if offset > 0 {
             return -offset
         }
-        offsetForHeader = maxHeight - headerHeight
-        return offsetForHeader
+        return maxHeight - headerHeight
     }
 
     private func getHeightForHeaderView() -> CGFloat {
@@ -453,12 +451,6 @@ extension ScalingHeaderScrollView {
     public func collapseProgress(_ progress: Binding<CGFloat>) -> ScalingHeaderScrollView {
         var scalingHeaderScrollView = self
         scalingHeaderScrollView._progress = progress
-        return scalingHeaderScrollView
-    }
-    
-    public func offsetOfHeader(_ offset: Binding<CGFloat>) -> ScalingHeaderScrollView {
-        var scalingHeaderScrollView = self
-        scalingHeaderScrollView._offsetForHeader = offset
         return scalingHeaderScrollView
     }
 
