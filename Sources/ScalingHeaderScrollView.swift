@@ -77,6 +77,8 @@ public struct ScalingHeaderScrollView<Header: View, HeaderOverlay: View, Content
 
     /// Use this variable to programmatically change header's visibility state
     @Binding private var shouldSnapTo: SnapHeaderState?
+    
+    @Binding private var offsetForHeader: CGFloat
 
     /// Set to false to disable pull-to-refresh
     private var isPullToRefreshEnabled: Bool
@@ -179,6 +181,7 @@ public struct ScalingHeaderScrollView<Header: View, HeaderOverlay: View, Content
         self.headerOverlay = headerOverlay()
         self.content = content()
         _progress = .constant(0)
+        _offsetForHeader = .constant(0)
         _scrollOffset = .constant(0)
         _scrollToTop = .constant(false)
         _shouldSnapTo = .constant(nil)
@@ -225,7 +228,6 @@ public struct ScalingHeaderScrollView<Header: View, HeaderOverlay: View, Content
                             .scaleEffect(headerScaleOnPullDown)
                             .overlay(alignment: .bottomLeading, content: {
                                 headerOverlay
-                                    .foregroundStyle(Color.yellow)
                                     .offset(y: getOffsetForHeader())
                             })
 
@@ -407,7 +409,8 @@ public struct ScalingHeaderScrollView<Header: View, HeaderOverlay: View, Content
         } else if offset > 0 {
             return -offset
         }
-        return maxHeight - headerHeight
+        offsetForHeader = maxHeight - headerHeight
+        return offsetForHeader
     }
 
     private func getHeightForHeaderView() -> CGFloat {
@@ -450,6 +453,12 @@ extension ScalingHeaderScrollView {
     public func collapseProgress(_ progress: Binding<CGFloat>) -> ScalingHeaderScrollView {
         var scalingHeaderScrollView = self
         scalingHeaderScrollView._progress = progress
+        return scalingHeaderScrollView
+    }
+    
+    public func offsetOfHeader(_ offset: Binding<CGFloat>) -> ScalingHeaderScrollView {
+        var scalingHeaderScrollView = self
+        scalingHeaderScrollView._offsetForHeader = offset
         return scalingHeaderScrollView
     }
 
