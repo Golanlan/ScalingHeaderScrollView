@@ -77,8 +77,6 @@ public struct ScalingHeaderScrollView<Header: View, HeaderOverlay: View, Content
 
     /// Use this variable to programmatically change header's visibility state
     @Binding private var shouldSnapTo: SnapHeaderState?
-    
-    @Binding private var offsetForHeader: CGFloat
 
     /// Set to false to disable pull-to-refresh
     private var isPullToRefreshEnabled: Bool
