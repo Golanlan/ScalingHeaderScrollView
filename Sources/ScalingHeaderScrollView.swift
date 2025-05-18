@@ -28,13 +28,16 @@ public enum SnapHeaderMode: Int {
     case afterFinishAccelerating
 }
 
-public struct ScalingHeaderScrollView<Header: View, Content: View>: View {
+public struct ScalingHeaderScrollView<Header: View, HeaderOverlay: View, Content: View>: View {
 
     /// Content on the top, which will be collapsed
     public var header: Header
+    
+    public var headerOverlay: HeaderOverlay
 
     /// Content on the bottom
     public var content: Content
+    
 
     /// Should the progress view be showing or not, when "pull to refresh" action
     @State private var pullToRefreshInProgress: Bool = false
@@ -170,8 +173,10 @@ public struct ScalingHeaderScrollView<Header: View, Content: View>: View {
     // MARK: - Init
 
     public init(@ViewBuilder header: @escaping () -> Header,
+                @ViewBuilder headerOverlay: @escaping () -> HeaderOverlay,
                 @ViewBuilder content: @escaping () -> Content) {
         self.header = header()
+        self.headerOverlay = headerOverlay()
         self.content = content()
         _progress = .constant(0)
         _scrollOffset = .constant(0)
@@ -218,8 +223,16 @@ public struct ScalingHeaderScrollView<Header: View, Content: View>: View {
                             .offset(y: getOffsetForHeader())
                             .allowsHitTesting(true)
                             .scaleEffect(headerScaleOnPullDown)
+                            .overlay(alignment: .bottomLeading, content: {
+                                headerOverlay
+                                    .foregroundStyle(Color.yellow)
+                                    .offset(y: getOffsetForHeader())
+                            })
+
+                        
                     }
                     .offset(y: getGeometryReaderVsScrollView(scrollGeometry: scrollGeometry, globalGeometry: globalGeometry))
+
                 }
                 .background(Color.clear)
                 .frame(height: maxHeight)
